@@ -23,7 +23,7 @@ class RoundEntity {
 		///
 		///	This function returns true if the two entities are colliding and false otherwise.
 		///	Place this function's definition in the Entities.cpp file.
-		bool isCollidingWithRoundEntity(const RoundEntity&) const;
+		bool isCollidingWithRoundEntity(const RoundEntity&);
 
 		/// Position of the entity as a vector of 2 dimensions
 		ofVec2f position;
@@ -62,7 +62,7 @@ public:
 	/// Performs collision with a particle (updating the particle's velocity)
 	/// Here you need to handle the collision between two particles, that is to say,
 	/// update the velocity of each particle (change direction).
-	void doCollisionWithRoundEntity(const RoundParticle&);
+	void doCollisionWithRoundEntity(RoundParticle&);
 
 	/// Performs collision with an obstacle (updating the particle's velocity)
 	/// Here you need to handle the collision between a particle and an obstacle.
