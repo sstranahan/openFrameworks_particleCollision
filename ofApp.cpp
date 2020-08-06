@@ -13,6 +13,7 @@ float ProjectConfig::REPEL_STRENGTH = 2e-2;
 
 void ofApp::setup(){
 	// TODO: You must complete this function. You are free to modify it at will. Review ofApp.h for more details
+	// SAS: Finished
 
 	for (int i = 0; i < ProjectConfig::PARTICLES_COUNT; i++) {
 		RoundParticle temp;
@@ -62,6 +63,7 @@ void ofApp::update(){
 
 void ofApp::draw(){
 	// TODO: You must complete this function. You are free to modify it at will. Review ofApp.h for more details
+	// SAS: Finished
 
 	for (int i = 0; i < particles.size(); i++) {
 		particles[i].draw();

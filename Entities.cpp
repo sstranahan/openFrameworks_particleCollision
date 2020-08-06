@@ -1,5 +1,6 @@
 #include "Entities.h"
 #include "ProjectConfig.h"
+#include "math.h"
 
 // ------------------ ROUND ENTITY DEFINITIONS --------------------
 
@@ -17,11 +18,25 @@ void RoundEntity::doWallsCollision() {
 	if (flip) velocity.y = -velocity.y;
 }
 
-bool RoundEntity::isCollidingWithRoundEntity(const RoundEntity& entity) const {
+bool RoundEntity::isCollidingWithRoundEntity(const RoundEntity& entity) {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
 
 	// if (sqrt(((position.x - entity.position.x) * (position.x - entity.position.x)) + ((position.y - entity.position.y) * (position.y - entity.position.y))) <= (radius + entity.radius))
-	if (position.distance(entity.position) <= radius + entity.radius)
+
+	// Following if statement will move one circle if there is any overlap to prevent "clumping" together
+	if (position.distance(entity.position) < radius + entity.radius){
+		
+		float angle = atan2(position.y - entity.position.y, position.x - entity.position.x);
+		float distToMove = radius + entity.radius - position.distance(entity.position);
+		
+		ofVec2f moveVec;
+		moveVec.x = cos(angle) * distToMove;
+		moveVec.y = sin(angle) * distToMove;
+		
+		position = moveVec + position;
+	}
+
+	if (position.distance(entity.position) == radius + entity.radius)
 		return true;
 	
 	return false;
@@ -43,7 +58,7 @@ RoundParticle::RoundParticle(){
 void RoundParticle::doUpdatePosition(){
 	position += velocity;
 }
-
+//
 void RoundParticle::draw(){
 	ofSetColor(208, 255, 63);
 	ofDrawCircle(position, radius);
@@ -66,13 +81,90 @@ void RoundParticle::doAttractToMouse() {
 	
 }
 
-void RoundParticle::doCollisionWithRoundEntity(const RoundParticle& particle) {
+void RoundParticle::doCollisionWithRoundEntity(RoundParticle& particle) {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
 
+
+	//ofVec2f tangentVec;
+	//tangentVec.y = -(particle.position.x - position.x);
+	//tangentVec.x = particle.position.y - position.y;
+	//tangentVec = tangentVec.normalize();
+
+	//ofVec2f relVelocityVec;
+	//relVelocityVec.x = (velocity.x - particle.velocity.x);
+	//relVelocityVec.y = (velocity.y - particle.velocity.y);
+
+	//float len = relVelocityVec.dot(tangentVec);
+
+	//ofVec2f tanVelComponent;
+	//tanVelComponent = tangentVec * len;
+
+	//ofVec2f velPerpToTan = relVelocityVec - tanVelComponent;
+
+	//velocity.x -= velPerpToTan.x;
+	//velocity.y -= velPerpToTan.y;
+
+
+	// *********************************************************************************** //
+	// SAS: Not sure if this is working *quite* the way I would like - some more to do here
+	// *********************************************************************************** //
+
+
+	ofVec2f collisionVec;
+	collisionVec.x = particle.position.x - position.x;
+	collisionVec.y = particle.position.y - position.y;
+
+	collisionVec = collisionVec.normalize();
+
+	ofVec2f relVelocity;
+	relVelocity.x = velocity.x - particle.velocity.x;
+	relVelocity.y = velocity.y - particle.velocity.y;
+
+	float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
+
+	velocity.x -= (speed * collisionVec.x);
+	velocity.y -= (speed * collisionVec.y);
+
+	particle.velocity.x += (speed * collisionVec.x);
+	particle.velocity.y += (speed * collisionVec.y);
 }
 
 void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
+	//ofVec2f tangentVec;
+	//tangentVec.y = -(obstacle.position.x - position.x);
+	//tangentVec.x = obstacle.position.y - position.y;
+	//tangentVec = tangentVec.normalize();
+
+	//ofVec2f relVelocityVec;
+	//relVelocityVec.x = (velocity.x);
+	//relVelocityVec.y = (velocity.y);
+
+	//float len = relVelocityVec.dot(tangentVec);
+
+	//ofVec2f tanVelComponent;
+	//tanVelComponent = tangentVec * len;
+
+	//ofVec2f velPerpToTan = relVelocityVec - tanVelComponent;
+
+	//velocity.x -= velPerpToTan.x;
+	//velocity.y -= velPerpToTan.y;
+
+	ofVec2f collisionVec;
+	collisionVec.x = obstacle.position.x - position.x;
+	collisionVec.y = obstacle.position.y - position.y;
+
+	collisionVec = collisionVec.normalize();
+
+	ofVec2f relVelocity;
+	relVelocity.x = velocity.x;
+	relVelocity.y = velocity.y;
+
+	float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
+
+	velocity.x -= (speed * collisionVec.x);
+	velocity.y -= (speed * collisionVec.y);
+
 
 }
 
