@@ -20,9 +20,10 @@ void RoundEntity::doWallsCollision() {
 bool RoundEntity::isCollidingWithRoundEntity(const RoundEntity& entity) const {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
 
-	if (sqrt(((position.x - entity.position.x) * (position.x - entity.position.x)) + ((position.y - entity.position.y) * (position.y - entity.position.y))) <= (radius + entity.radius))
+	// if (sqrt(((position.x - entity.position.x) * (position.x - entity.position.x)) + ((position.y - entity.position.y) * (position.y - entity.position.y))) <= (radius + entity.radius))
+	if (position.distance(entity.position) <= radius + entity.radius)
 		return true;
-
+	
 	return false;
 }
 
@@ -50,26 +51,29 @@ void RoundParticle::draw(){
 
 void RoundParticle::doAttractToMouse() {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
-
-	ofVec2f point = position;
-	if (position.distance(point) > ProjectConfig::MIN_ATTRACTION_DISTANCE)
+	
+	ofVec2f mouseLoc;
+	mouseLoc.x = (float)ofGetMouseX();
+	mouseLoc.y = (float)ofGetMouseY();
+	
+	if (position.distance(mouseLoc) > ProjectConfig::MIN_ATTRACTION_DISTANCE)
 		return;
-	ofVec2f force = (position - point).getNormalized();
+
+	ofVec2f force = (position - mouseLoc).getNormalized();
 	float lambda = ProjectConfig::ATTRACTION_STRENGTH;
-	// Changes direction without increasing velocity
-	velocity = ((1 - lambda) * velocity + force * lambda).getNormalized() * velocity.length();
+
+	velocity = ((1 - lambda) * velocity - force * lambda).getNormalized() * velocity.length();
+	
 }
 
 void RoundParticle::doCollisionWithRoundEntity(const RoundParticle& particle) {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
-	velocity.x = -1 * velocity.x;
-	velocity.y = -1 * velocity.y;
+
 }
 
 void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
-	velocity.x = -1 * velocity.x;
-	velocity.y = -1 * velocity.y;
+
 }
 
 void RoundParticle::doRepelFromRoundObstacle(const RoundObstacle& obstacle) {
