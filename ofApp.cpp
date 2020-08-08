@@ -27,6 +27,11 @@ void ofApp::setup(){
 }
 
 void ofApp::update(){
+
+	// Updates position
+	for (int i = 0; i < particles.size(); i++) {
+		particles[i].doUpdatePosition();
+	}
 	// Verifies collisions
 	for (int i = 0; i < particles.size(); i++) {
 		// Performs attraction to mouse
@@ -55,10 +60,7 @@ void ofApp::update(){
 		// Verifies collisions to walls
 		particles[i].doWallsCollision();
 	}
-	// Updates position
-	for (int i = 0; i < particles.size(); i++) {
-		particles[i].doUpdatePosition();
-	}
+
 }
 
 void ofApp::draw(){
