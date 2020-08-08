@@ -110,23 +110,31 @@ void RoundParticle::doCollisionWithRoundEntity(RoundParticle& particle) {
 	// *********************************************************************************** //
 
 
-	ofVec2f collisionVec;
-	collisionVec.x = particle.position.x - position.x;
-	collisionVec.y = particle.position.y - position.y;
+	//ofVec2f collisionVec;
+	//collisionVec.x = particle.position.x - position.x;
+	//collisionVec.y = particle.position.y - position.y;
 
-	collisionVec = collisionVec.normalize();
+	//collisionVec = collisionVec.normalize();
 
-	ofVec2f relVelocity;
-	relVelocity.x = velocity.x - particle.velocity.x;
-	relVelocity.y = velocity.y - particle.velocity.y;
+	//ofVec2f relVelocity;
+	//relVelocity.x = velocity.x - particle.velocity.x;
+	//relVelocity.y = velocity.y - particle.velocity.y;
 
-	float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
+	//float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
 
-	velocity.x -= (speed * collisionVec.x);
-	velocity.y -= (speed * collisionVec.y);
+	//velocity.x -= (speed * collisionVec.x);
+	//velocity.y -= (speed * collisionVec.y);
 
-	particle.velocity.x += (speed * collisionVec.x);
-	particle.velocity.y += (speed * collisionVec.y);
+	//particle.velocity.x += (speed * collisionVec.x);
+	//particle.velocity.y += (speed * collisionVec.y);
+
+	ofVec2f normalVec;
+	normalVec.x = particle.position.x - position.x;
+	normalVec.y = particle.position.y - position.y;
+	normalVec = normalVec.getNormalized();
+
+	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
+	velocity = newVel;
 }
 
 void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
@@ -150,20 +158,29 @@ void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 	//velocity.x -= velPerpToTan.x;
 	//velocity.y -= velPerpToTan.y;
 
-	ofVec2f collisionVec;
-	collisionVec.x = obstacle.position.x - position.x;
-	collisionVec.y = obstacle.position.y - position.y;
+	//ofVec2f collisionVec;
+	//collisionVec.x = obstacle.position.x - position.x;
+	//collisionVec.y = obstacle.position.y - position.y;
 
-	collisionVec = collisionVec.normalize();
+	//collisionVec = collisionVec.normalize();
 
-	ofVec2f relVelocity;
-	relVelocity.x = velocity.x;
-	relVelocity.y = velocity.y;
+	//ofVec2f tangentVec;
+	//tangentVec.x = collisionVec.y;
+	//tangentVec.y = collisionVec.x;
 
-	float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
+	//float speed = relVelocity.x * collisionVec.x + relVelocity.y * collisionVec.y;
 
-	velocity.x -= (speed * collisionVec.x);
-	velocity.y -= (speed * collisionVec.y);
+	//velocity.x -= (speed * collisionVec.x);
+	//velocity.y -= (speed * collisionVec.y);
+
+	ofVec2f normalVec;
+	normalVec.x = obstacle.position.x - position.x;
+	normalVec.y = obstacle.position.y - position.y;
+	normalVec = normalVec.getNormalized();
+
+	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
+	velocity = newVel;
+
 
 
 }
