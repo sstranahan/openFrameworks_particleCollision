@@ -23,7 +23,7 @@ bool RoundEntity::isCollidingWithRoundEntity(const RoundEntity& entity) {
 
 	// if (sqrt(((position.x - entity.position.x) * (position.x - entity.position.x)) + ((position.y - entity.position.y) * (position.y - entity.position.y))) <= (radius + entity.radius))
 
-	// Following if statement will move one circle if there is any overlap to prevent "clumping" together
+	// The following if statement will move one circle if there is any overlap to prevent "clumping" together
 	if (position.distance(entity.position) < radius + entity.radius){
 		
 		float angle = atan2(position.y - entity.position.y, position.x - entity.position.x);
@@ -36,7 +36,9 @@ bool RoundEntity::isCollidingWithRoundEntity(const RoundEntity& entity) {
 		position = moveVec + position;
 	}
 
-	if (position.distance(entity.position) == radius + entity.radius)
+
+	// This if statement returns true if the distance between the two particles is less than or equal to their combined radii
+	if (position.distance(entity.position) <= radius + entity.radius)
 		return true;
 	
 	return false;
@@ -67,6 +69,11 @@ void RoundParticle::draw(){
 void RoundParticle::doAttractToMouse() {
 	// TODO: You must complete this function. You are free to modify it at will. Review Entities.h for more details
 	
+
+	// Attract to mouse function -> if mouse is within attract distance, creates a unit vector in direction of mouse from particle,
+	// creates normalized (unitized) vector in direction of mouse factored at the ATTRACTION_STRENGTH. Then multiplies this unit 
+	// vector by length of velocity vector to avoid changing speed
+
 	ofVec2f mouseLoc;
 	mouseLoc.x = (float)ofGetMouseX();
 	mouseLoc.y = (float)ofGetMouseY();
@@ -133,6 +140,9 @@ void RoundParticle::doCollisionWithRoundEntity(RoundParticle& particle) {
 	normalVec.y = particle.position.y - position.y;
 	normalVec = normalVec.getNormalized();
 
+	// This seems to work well. Create a unitized vector normal to the direction of collision. New velocity is original velocity minus
+	// twice the dot product of velocity and normal vector in direction of normal vector
+
 	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
 	velocity = newVel;
 }
@@ -173,6 +183,9 @@ void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 	//velocity.x -= (speed * collisionVec.x);
 	//velocity.y -= (speed * collisionVec.y);
 
+	// This seems to work well. Create a unitized vector normal to the direction of collision. New velocity is original velocity minus
+	// twice the dot product of velocity and normal vector in direction of normal vector
+
 	ofVec2f normalVec;
 	normalVec.x = obstacle.position.x - position.x;
 	normalVec.y = obstacle.position.y - position.y;
@@ -180,9 +193,6 @@ void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 
 	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
 	velocity = newVel;
-
-
-
 }
 
 void RoundParticle::doRepelFromRoundObstacle(const RoundObstacle& obstacle) {
