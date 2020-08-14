@@ -135,16 +135,24 @@ void RoundParticle::doCollisionWithRoundEntity(RoundParticle& particle) {
 	//particle.velocity.x += (speed * collisionVec.x);
 	//particle.velocity.y += (speed * collisionVec.y);
 
+	float speed = velocity.length();
+
 	ofVec2f normalVec;
-	normalVec.x = particle.position.x - position.x;
-	normalVec.y = particle.position.y - position.y;
-	normalVec = normalVec.getNormalized();
+	normalVec.x = position.x - particle.position.x;
+	normalVec.y = position.y - particle.position.y;
+	//normalVec = normalVec.getNormalized();
+
+	velocity = velocity + normalVec;
+	velocity = velocity.getNormalized();
+
+	velocity = velocity * speed;
 
 	// This seems to work well. Create a unitized vector normal to the direction of collision. New velocity is original velocity minus
 	// twice the dot product of velocity and normal vector in direction of normal vector
 
-	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
-	velocity = newVel;
+	//ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
+	//velocity = newVel.getNormalized();
+	// velocity = velocity * speed;
 }
 
 void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
@@ -186,13 +194,30 @@ void RoundParticle::doCollisionWithRoundEntity(const RoundObstacle& obstacle) {
 	// This seems to work well. Create a unitized vector normal to the direction of collision. New velocity is original velocity minus
 	// twice the dot product of velocity and normal vector in direction of normal vector
 
-	ofVec2f normalVec;
-	normalVec.x = obstacle.position.x - position.x;
-	normalVec.y = obstacle.position.y - position.y;
-	normalVec = normalVec.getNormalized();
+	// float speed = velocity.length();
 
-	ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
-	velocity = newVel;
+	//ofVec2f normalVec;
+	//normalVec.x = obstacle.position.x - position.x;
+	//normalVec.y = obstacle.position.y - position.y;
+	//normalVec = normalVec.getNormalized();
+
+	//ofVec2f newVel = velocity - 2 * (velocity.dot(normalVec)) * normalVec;
+	//velocity = newVel;
+
+	// velocity = velocity * speed;
+
+	float speed = velocity.length();
+
+	ofVec2f normalVec;
+	normalVec.x = position.x - obstacle.position.x;
+	normalVec.y = position.y - obstacle.position.y;
+	//normalVec = normalVec.getNormalized();
+
+	velocity = velocity + normalVec;
+	velocity = velocity.getNormalized();
+
+	velocity = velocity * speed;
+
 }
 
 void RoundParticle::doRepelFromRoundObstacle(const RoundObstacle& obstacle) {
